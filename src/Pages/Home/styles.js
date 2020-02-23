@@ -7,6 +7,13 @@ export const ProductList = styled.ul`
   gap: 20px;
   list-style: none;
 
+  @media only screen and (max-width: 1000px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media only screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+
   > li {
     display: flex;
     flex-direction: column;
@@ -16,7 +23,7 @@ export const ProductList = styled.ul`
 
     > img {
       align-self: center;
-      max-width: 250px;
+      max-width: 100%;
     }
 
     > strong {
