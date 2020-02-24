@@ -37,9 +37,6 @@ module.exports = {
     'no-console': ['error', {
       allow: ["tron"]
     }],
-    "no-param-reassign": ["error", {
-      "props": true,
-      "ignorePropertyModificationsFor": ["draft"]
-    }],
+    "no-param-reassign": 'off',
   },
 };
