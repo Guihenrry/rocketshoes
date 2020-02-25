@@ -10,8 +10,11 @@ export const ProductList = styled.ul`
   @media only screen and (max-width: 1000px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media only screen and (max-width: 600px) {
-    grid-template-columns: 1fr;
+  @media only screen and (max-width: 660px) {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
   }
 
   > li {
@@ -20,6 +23,11 @@ export const ProductList = styled.ul`
     background: #fff;
     padding: 20px;
     border-radius: 4px;
+
+    @media only screen and (max-width: 660px) {
+      min-width: 220px;
+      margin-right: 20px;
+    }
 
     > img {
       align-self: center;
