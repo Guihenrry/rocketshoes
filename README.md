@@ -1,4 +1,4 @@
-# 👞 RocketShoes
+# RocketShoes 👞
 
 Simples e-commerce que lista produtos e permite adicionar ao carrinho. Foi desenvolvido utilizando [React](https://pt-br.reactjs.org/) e [Redux](https://redux.js.org/).
 
