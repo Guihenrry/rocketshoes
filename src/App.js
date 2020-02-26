@@ -7,6 +7,7 @@ import './config/ReactotronConfig';
 import store from './store';
 import GlobalStyles from './styles/global';
 import Header from './Components/Header';
+import Footer from './Components/Footer';
 import Routes from './routes';
 import history from './services/history';
 
@@ -15,9 +16,10 @@ function App() {
     <Provider store={store}>
       <Router history={history}>
         <GlobalStyles />
+        <ToastContainer autoClose={3000} />
         <Header />
         <Routes />
-        <ToastContainer autoClose={3000} />
+        <Footer />
       </Router>
     </Provider>
   );

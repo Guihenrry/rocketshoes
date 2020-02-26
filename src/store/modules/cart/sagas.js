@@ -3,12 +3,16 @@ import { toast } from 'react-toastify';
 
 import api from '../../../services/api';
 import history from '../../../services/history';
-import { addToCartSuccess, updateAmountSuccess } from './actions';
+import {
+  addToCartSuccess,
+  updateAmountSuccess,
+  updateAmountFailure,
+} from './actions';
 import { formatPrice } from '../../../util/format';
 
 function* addToCart({ id }) {
   const productExists = yield select(state =>
-    state.cart.find(product => product.id === id)
+    state.cart.products.find(product => product.id === id)
   );
 
   const stock = yield call(api.get, `/stock/${id}`);
@@ -20,6 +24,7 @@ function* addToCart({ id }) {
 
   if (amount > stockAmount) {
     toast.error('Quantidade solicitada fora de estoque');
+    yield put(updateAmountFailure(id));
     return;
   }
 
@@ -31,6 +36,7 @@ function* addToCart({ id }) {
     const data = {
       ...response.data,
       amount: 1,
+      loading: true,
       priceFormated: formatPrice(response.data.price),
     };
 

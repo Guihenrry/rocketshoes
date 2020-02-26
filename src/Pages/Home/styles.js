@@ -68,6 +68,11 @@ export const ProductList = styled.ul`
         padding: 12px;
         background: rgba(0, 0, 0, 0.1);
 
+        > div {
+          display: flex;
+          align-items: center;
+        }
+
         > svg {
           margin-right: 5px;
         }
@@ -80,4 +85,10 @@ export const ProductList = styled.ul`
       }
     }
   }
+`;
+
+export const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
 `;
