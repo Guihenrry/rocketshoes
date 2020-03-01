@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,77 +10,71 @@ import { formatPrice } from '../../util/format';
 import { ProductList, Loading } from './styles';
 import * as CartActions from '../../store/modules/cart/actions';
 
-class Home extends Component {
-  state = {
-    products: [],
-    loading: true,
-  };
+function Home({ amount, addingIds, addToCartRequest }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  static propTypes = {
-    addToCartRequest: PropTypes.func.isRequired,
-    addingIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-    amount: PropTypes.objectOf(PropTypes.number).isRequired,
-  };
+  useEffect(() => {
+    async function loadProducts() {
+      const response = await api.get('/products');
 
-  async componentDidMount() {
-    const response = await api.get('/products');
+      const data = response.data.map(product => ({
+        ...product,
+        priceFormated: formatPrice(product.price),
+      }));
 
-    const data = response.data.map(product => ({
-      ...product,
-      priceFormated: formatPrice(product.price),
-    }));
-
-    this.setState({ products: data, loading: false });
-  }
-
-  handleAddProduct = id => {
-    const { addToCartRequest } = this.props;
-    addToCartRequest(id);
-  };
-
-  render() {
-    const { products, loading } = this.state;
-    const { amount, addingIds } = this.props;
-
-    if (loading) {
-      return (
-        <Loading>
-          <Loader type="Oval" color="#FFF" />
-        </Loading>
-      );
+      setProducts(data);
+      setLoading(false);
     }
 
+    loadProducts();
+  }, []);
+
+  function handleAddProduct(id) {
+    addToCartRequest(id);
+  }
+
+  if (loading) {
     return (
-      <ProductList>
-        {products.map(product => (
-          <li key={product.id}>
-            <img src={product.image} alt={product.title} />
-            <strong>{product.title}</strong>
-            <span>{product.priceFormated}</span>
-
-            <button
-              type="button"
-              onClick={() => this.handleAddProduct(product.id)}
-            >
-              <div>
-                {addingIds.includes(product.id) ? (
-                  <Loader type="Oval" height={16} width={24} color="#FFF" />
-                ) : (
-                  <>
-                    <MdAddShoppingCart size={16} color="#FFF" />
-                    {amount[product.id] || 0}
-                  </>
-                )}
-              </div>
-
-              <span>Adicionar ao carrinho</span>
-            </button>
-          </li>
-        ))}
-      </ProductList>
+      <Loading>
+        <Loader type="Oval" color="#FFF" />
+      </Loading>
     );
   }
+
+  return (
+    <ProductList>
+      {products.map(product => (
+        <li key={product.id}>
+          <img src={product.image} alt={product.title} />
+          <strong>{product.title}</strong>
+          <span>{product.priceFormated}</span>
+
+          <button type="button" onClick={() => handleAddProduct(product.id)}>
+            <div>
+              {addingIds.includes(product.id) ? (
+                <Loader type="Oval" height={16} width={24} color="#FFF" />
+              ) : (
+                <>
+                  <MdAddShoppingCart size={16} color="#FFF" />
+                  {amount[product.id] || 0}
+                </>
+              )}
+            </div>
+
+            <span>Adicionar ao carrinho</span>
+          </button>
+        </li>
+      ))}
+    </ProductList>
+  );
 }
+
+Home.propTypes = {
+  addToCartRequest: PropTypes.func.isRequired,
+  addingIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+  amount: PropTypes.objectOf(PropTypes.number).isRequired,
+};
 
 const mapStateToProps = state => ({
   amount: state.cart.products.reduce((amount, product) => {
